@@ -6,7 +6,7 @@ function retval = Crabs (input1, input2)
 % Draw the game map and initialize map dimensions.
 [mapHeight , mapWidth] = drawMap( "BGImage.png" );
 % Initialize captain location, heading and size
-xCapt = 2000;
+xCapt = 1700;
 yCapt = 950;
 thetaCapt = -pi/2;
 sizeCapt = 50;
