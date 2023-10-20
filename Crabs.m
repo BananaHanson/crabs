@@ -19,29 +19,47 @@ xCrab = 1000;
 yCrab = 1200;
 thetaCrab = -pi/2;
 sizeCrab = 50;
-%draw initial captain and crab
+%initialize jelly location, heading and size
+xJelly = rand*mapWidth;
+yJelly = 0;
+thetaJelly = -pi/2;
+sizeJelly = 25;
+level = 1;
+%draw initial captain and crab and jelly
 captGraphics = drawCapt(xCapt,yCapt,thetaCapt,sizeCapt);
 crabGraphics = drawCrab(xCrab,yCrab,thetaCrab,sizeCrab);
+jellyGraphics = drawJelly(xJelly,yJelly,thetaJelly,sizeJelly);
 %%%%% main loop %%%%%%%%%%
 
-cmd = "null"; % initial command
+while(1)
+% Put your jellyfish stuff here ...
+% erase old jellyfish
+for i=1:length(jellyGraphics)
+delete(jellyGraphics(i));
+endfor
+% move jellyfish
+[xJelly,yJelly,thetaJelly] = moveJelly(level, xJelly, yJelly,thetaJelly, sizeJelly, mapHeight,mapWidth);
+% draw jellyfish
+jellyGraphics = drawJelly(xJelly,yJelly,thetaJelly,sizeJelly);
 
 
-while ( cmd != "Q") % While not quit, read keyboard and respond
-
-    cmd = kbhit(); % Read the keyboard.
+% read the keyboard
+cmd = kbhit(1);
+if (cmd == 'Q')
+break;
+endif
 
     if( cmd == "w" || cmd == "a" || cmd == "d" ) %Captain has moved. Respond.
       % erase old captain
-      for i=1:length( captainGraphics )
-        set( captainGraphics(i), 'Visible', 'off' );
+      for i=1:length( captGraphics )
+        set( captGraphics(i), 'Visible', 'off' );
       endfor
 
       % move capt
       [xCapt, yCapt, thetaCapt] = moveCapt(cmd, xCapt, yCapt, thetaCapt);
 
       % draw new capt
-      captainGraphics = drawCapt( xCapt, yCapt, thetaCapt, sizeCapt);
+      captGraphics = drawCapt( xCapt, yCapt, thetaCapt, sizeCapt);
 
 elseif (cmd == "i" || cmd == "j" || cmd == "k" || cmd == "l" || cmd ==",") % respond crab moved
       %erase old crab
@@ -57,6 +75,8 @@ elseif (cmd == "i" || cmd == "j" || cmd == "k" || cmd == "l" || cmd ==",") % res
       crabGraphics = drawCrab(xCrab,yCrab,thetaCrab,sizeCrab);
 
     endif
+    fflush(stdout);
+pause(.01)
 endwhile
 
 close all
