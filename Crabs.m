@@ -10,6 +10,8 @@ xCapt = 1700;
 yCapt = 950;
 thetaCapt = -pi/2;
 sizeCapt = 50;
+healthCapt=100;
+crabsCaught=0;
 % Draw the captain and initialize graphics handles
 %*********************************************************
 % Put your call to drawCapt() here ..... You must give drawCapt its
@@ -24,32 +26,53 @@ xJelly = rand*mapWidth;
 yJelly = 0;
 thetaJelly = -pi/2;
 sizeJelly = 25;
-level = 1;
+jellySting=2;
+level=1
 %draw initial captain and crab and jelly
-captGraphics = drawCapt(xCapt,yCapt,thetaCapt,sizeCapt);
+[captGraphics,xNet,yNet] = drawCapt(xCapt,yCapt,thetaCapt,sizeCapt);
 crabGraphics = drawCrab(xCrab,yCrab,thetaCrab,sizeCrab);
 jellyGraphics = drawJelly(xJelly,yJelly,thetaJelly,sizeJelly);
+
+
+
+% print health status
+    healthLoc = [100,100];
+     crabsCaughtLoc = [100,175];
+       healthStatus = text(healthLoc(1), healthLoc(2), strcat('Health = ', ...
+    num2str(healthCapt)), 'FontSize', 12, 'Color', 'red');
+        crabsCaughtStatus = text(crabsCaughtLoc(1), crabsCaughtLoc(2), ...
+    strcat('Crabs Caught = ',num2str(crabsCaught)), 'FontSize', 12, 'Color', 'red');
+
+
+
+
 %%%%% main loop %%%%%%%%%%
-
 while(1)
-% Put your jellyfish stuff here ...
-% erase old jellyfish
-for i=1:length(jellyGraphics)
-delete(jellyGraphics(i));
-endfor
-% move jellyfish
-[xJelly,yJelly,thetaJelly] = moveJelly(level, xJelly, yJelly,thetaJelly, sizeJelly, mapHeight,mapWidth);
-% draw jellyfish
-jellyGraphics = drawJelly(xJelly,yJelly,thetaJelly,sizeJelly);
+    % Put your jellyfish stuff here ...
+    % erase old jellyfish
+    for i=1:length(jellyGraphics)
+       delete(jellyGraphics(i));
+    endfor
+    % move jellyfish
+    [xJelly,yJelly,thetaJelly] = moveJelly(level, xJelly, yJelly,thetaJelly, sizeJelly, mapHeight,mapWidth);
+    % draw jellyfish
+    jellyGraphics = drawJelly(xJelly,yJelly,thetaJelly,sizeJelly);
+
+    %remove old and plot new health and points status to screen
+     delete(healthStatus);
+     delete(crabsCaughtStatus);
+
+     healthStatus = text(healthLoc(1), healthLoc(2), strcat('Health = ',num2str(healthCapt)), 'FontSize', 12, 'Color', 'red');
+    crabsCaughtStatus = text(crabsCaughtLoc(1), crabsCaughtLoc(2),strcat('Crabs Caught = ', num2str(crabsCaught)), 'FontSize', 12, 'Color', 'red');
 
 
-% read the keyboard
-cmd = kbhit(1);
-if (cmd == 'Q')
-break;
-endif
+    % read the keyboard
+    cmd = kbhit(1);
+    if (cmd == 'Q')
+       break;
+    endif
 
-    if( cmd == "w" || cmd == "a" || cmd == "d" ) %Captain has moved. Respond.
+   if( cmd == "w" || cmd == "a" || cmd == "d" ) %Captain has moved. Respond.
       % erase old captain
       for i=1:length( captGraphics )
         set( captGraphics(i), 'Visible', 'off' );
@@ -59,24 +82,51 @@ endif
       [xCapt, yCapt, thetaCapt] = moveCapt(cmd, xCapt, yCapt, thetaCapt);
 
       % draw new capt
-      captGraphics = drawCapt( xCapt, yCapt, thetaCapt, sizeCapt);
+      [captGraphics,xNet,yNet] = drawCapt( xCapt, yCapt, thetaCapt, sizeCapt);
 
-elseif (cmd == "i" || cmd == "j" || cmd == "k" || cmd == "l" || cmd ==",") % respond crab moved
+  elseif (cmd == "i" || cmd == "j" || cmd == "k" || cmd == "l" || cmd ==",") % respond crab moved
+
       %erase old crab
       for i=1:length(crabGraphics)
         set(crabGraphics(i),'Visible','off');
-
-     endfor
+      endfor
 
       %move crab
-      [xCrab,yCrab,thetaCrab] = moveCrab(cmd,xCrab,yCrab,thetaCrab,sizeCrab, mapHeight,
-      mapWidth);
-      %draw new captain and crab
-      crabGraphics = drawCrab(xCrab,yCrab,thetaCrab,sizeCrab);
+      [xCrab,yCrab,thetaCrab] = moveCrab(cmd,xCrab,yCrab,thetaCrab,sizeCrab, mapHeight, mapWidth);
 
-    endif
-    fflush(stdout);
-pause(.01)
+      %draw new crab
+      crabGraphics = drawCrab(xCrab,yCrab,thetaCrab,sizeCrab);
+   endif
+
+       if ( getDist(xJelly,yJelly,xCapt,yCapt) < 3*sizeCapt )
+          healthCapt = healthCapt - jellySting;
+       endif
+
+       if( getDist(xNet,yNet,xCrab,yCrab) < 2*sizeCapt ) %crab is caught
+
+            %keep track of how many crabs are caught
+            crabsCaught = crabsCaught +1;
+
+           %erase old crab
+            for i=1:length(crabGraphics)
+              delete(crabGraphics(i));
+            endfor
+
+          %create a new crab. initialize new crab location, heading and size
+              xCrab = rand*mapWidth;
+              yCrab = rand*mapHeight;
+              thetaCrab = -pi/2;
+              sizeCrab = 50;
+
+          %draw new crab
+          crabGraphics = drawCrab(xCrab,yCrab,thetaCrab,sizeCrab);
+
+       endif
+
+
+  fflush(stdout);
+  pause(.01)
+
 endwhile
 
 close all
