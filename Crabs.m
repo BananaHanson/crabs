@@ -102,7 +102,35 @@ while(1)
       % draw new capt
       [captGraphics,xNet,yNet] = drawCapt( xCapt, yCapt, thetaCapt, sizeCapt);
 
- endif
+endif
+
+for k=1:numCrabs
+
+      if( !isCrabCaught(k) && getDist(xNet,yNet,xCrab(k),yCrab(k)) < 7*sizeCapt )
+
+            % erase the old crab as already done in crabs
+
+              for i=1:length(crabGraphics(:,k))
+                 delete(crabGraphics(i,k));
+              endfor
+
+          % compute the crab’s angle to the net with getTheta and the components suggested above
+
+               thetaCrab(k) = getTheta (xNet-xCrab(k), yNet-yCrab(k));
+
+          % call moveCrab(). To move backwards use cmd =”k”
+               cmd ="k";
+
+              [xCrab(k),yCrab(k),thetaCrab(k)] = moveCrab(cmd,xCrab(k),yCrab(k),thetaCrab(k),mapHeight,mapWidth, sizeCrab);
+
+          % draw the crab as already done in crabs
+
+               crabGraphics(:,k) = drawCrab(xCrab(k),yCrab(k),thetaCrab(k),sizeCrab);
+
+       endif
+
+
+ endfor
 
 
      for k=1:numCrabs
