@@ -1,4 +1,4 @@
-function captainGraphics = drawCapt (xCapt , yCapt , thetaCapt , sizeCapt)
+function [captainGraphics,xNet,yNet] = drawCapt(xCapt,yCapt,thetaCapt,sizeCapt)
 % In the future, this function will draw the captain at the given
 % position (xCapt , yCapt) , with heading thetaCapt.
 % For now, it draws the captain at the (0, 0) with 0 heading.
@@ -34,6 +34,15 @@ pt11=capt( : , 11);
 pt12=capt( : , 12);
 pt13=capt( : , 13);
 pt14=capt( : , 14);
+pt15=capt( : , 15);
+pt16=capt( : , 16);
+pt17=capt( : , 17);
+pt18=capt( : , 18);
+pt19=capt( : , 19);
+pt20=capt( : , 20);
+%Set the net center
+xNet = pt20(1);
+yNet = pt20(2);
 % Draw the captain and set the return vector of graphics handles.
 captainGraphics(1) = drawLine(pt1 , pt2 , "k");
 captainGraphics(2) = drawLine(pt2 , pt3 , "k");
@@ -47,4 +56,9 @@ captainGraphics(9) = drawLine(pt9 , pt10 , "k");
 captainGraphics(10) = drawLine(pt1 , pt11 , "k");
 captainGraphics(11) = drawLine(pt6 , pt12 , "k");
 captainGraphics(12) = drawLine(pt13 , pt14 , "k");
+captainGraphics(13) = drawLine(pt15 , pt19 , "k");
+captainGraphics(14) = drawLine(pt15 , pt16 , "k");
+captainGraphics(15) = drawLine(pt19 , pt18 , "k");
+captainGraphics(16) = drawLine(pt13 , pt20 , "k");
+captainGraphics(17) = drawLine(pt17 , pt20 , "k");
 endfunction
